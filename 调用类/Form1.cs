@@ -20,19 +20,26 @@ namespace 调用类
         private void button1_Click(object sender, EventArgs e)
         {
 
-            UpdateClass.UpdateFrom();
+            UpdateClass.UpdateFrom("KTE");
             MessageBox.Show("11111111");
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+
+            label1.Text= Process.GetCurrentProcess().ProcessName;
             foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
             {
-                if (p.Id ==int.Parse(label1.Text))
+                if (p.ProcessName ==label1.Text)
                 {
                     MessageBox.Show("dfjasdklasdfklklasdfjklsdjklasdfk");
                  }
             }
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }

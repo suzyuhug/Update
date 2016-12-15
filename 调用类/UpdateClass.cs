@@ -12,7 +12,7 @@ namespace 调用类
 {
     class UpdateClass
     {
-        static string AppName = "KTE";
+        static string AppName =null;
         public static readonly string CnStr = "server=10.194.48.150\\mysql;user id=sa;password=Aa123456;initial catalog=Update OnLine;Connect Timeout=5";
 
         public static DataSet ExcuteDataSet(string Sql)
@@ -34,8 +34,9 @@ namespace 调用类
                 return null;
             }
         }
-        public static void UpdateFrom()
+        public static void UpdateFrom(String Name)
         {
+            AppName = Name;
             string str = UpdateClass.Update();
             if (str != null)
             {
@@ -49,10 +50,8 @@ namespace 调用类
             }
         }
 
-
         public static  string Update()
-        {
-                       
+        {                       
             string sql = $"exec sp_REVdes '{AppName}'";
             DataSet ds = new DataSet();
             string rev, des;
@@ -74,25 +73,39 @@ namespace 调用类
             else
             {
                 return null;
-            }
-           
-          
+            }                    
         }
         public static bool loadUpdate()
         {
-            string path = $"{Application.StartupPath.ToString()}\\在线更新程序.exe";
+            string path = $"{Application.StartupPath.ToString()}\\Update.exe";
+            if (!File.Exists(path))
+            {
+                string sql = "exec sp_GetUpdate";
+                DataSet ds = new DataSet();
+                ds = ExcuteDataSet(sql);
+                if (ds != null)
+                {
+                    Byte[] Files = (byte[])ds.Tables[0].Rows[0]["Application"];
+                    string paths = $"{Application.StartupPath.ToString()}\\Update.exe";
+                    BinaryWriter bw = new BinaryWriter(File.Open(paths, FileMode.OpenOrCreate));
+                    bw.Write(Files);
+                    bw.Close();
+                }
+            }
             if (File.Exists(path))
             {
-                int ID = Process.GetCurrentProcess().Id;
+                string ID = Process.GetCurrentProcess().ProcessName;
                 string message = $"{AppName}#{ID}";
                 Process.Start(path, message);
                 return true;
             }
             else
             {
-                MessageBox.Show("更新程序不存在！");
+                MessageBox.Show("更新程序不存在！", "在线更新程序", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
-            }          
+            }  
+
+              
         }
     }
 }

@@ -178,5 +178,11 @@ namespace 升级程序服务端
                 MessageBox.Show("版本号一至无法更新！", "在线更新程序", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void 更新更新程序ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Updateapp app = new Updateapp();
+            app.ShowDialog();
+        }
     }
 }

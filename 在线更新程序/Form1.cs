@@ -18,22 +18,49 @@ namespace 在线更新程序
         {
             InitializeComponent();
         }
-        
-        
+        Thread thread;
+
         private void Form1_Load(object sender, EventArgs e)
         {
-      
-          
+            int ScreenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+            int ScreenHeight = Screen.PrimaryScreen.WorkingArea.Height;
+            int x = ScreenWidth - this.Width - 5;
+            int y = ScreenHeight - this.Height - 5;
+                this.Location = new Point(x, y);
+
+
+            thread = new Thread(loadupdate);
+            thread.Start();
+           
+
+
+        }
+        private void loadupdate()
+        {
+            string[] sArray = Program.str.Split('#');
+
+            foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
+            {
+                if (p.ProcessName == sArray[1])
+                {
+                    p.Kill();
+
+                }
+            }
+
+            Thread.Sleep(3000);
+            Gettmepfile(sArray[0]);
+            thread.Abort();
 
         }
 
        
-        private void  Gettmepfile()//下载更新文件到临时文件夹
+        private void  Gettmepfile(string n)//下载更新文件到临时文件夹
         {
             try
             {
-
-                string sql = $"exec sp_GetTempFile '{Program.str.ToString()}'";
+               
+                string sql = $"exec sp_GetTempFile '{n}'";
                 DataSet ds = new DataSet();
                 ds = SqlHelper.ExcuteDataSet(sql);
                 if (ds != null)
@@ -41,11 +68,11 @@ namespace 在线更新程序
                     bool B = new bool();
                     pb.Maximum = ds.Tables[0].Rows.Count*2;
                     pb.Value = 0;
-                   //下载到临时文件夹
+                    //下载到临时文件夹
                     for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                     {
                         Thread.Sleep(100);
-                        pb.Value++; 
+                        pb.Value++;
                         string filepath = $"{Application.StartupPath.ToString()}\\TempFile{ds.Tables[0].Rows[i]["INstallPart"].ToString()}";
                         string filename = ds.Tables[0].Rows[i]["FileName"].ToString();
                         label1.Text = $"下载 {filename}";
@@ -61,6 +88,7 @@ namespace 在线更新程序
                         bw.Close();
                         B = true;
                     }
+                  
 
 
                     //替换旧的文件
@@ -90,15 +118,28 @@ namespace 在线更新程序
                     di.Delete(true);
 
                 }
+                else
+                {
+                  
+                    MessageBox.Show("没有找到更新文件！", "在线更新程序", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
+                
                 label1.Text = "更新完成";
-                MessageBox.Show("1233");
+       
+                MessageBox.Show("更新成功,请重新启动程序！", "在线更新程序", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                Application.Exit();
                
               
             }
             catch (Exception)
             {
-                MessageBox.Show("faile");
-            
+                MessageBox.Show("更新失败了，我也没办法！", "在线更新程序", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                Application.Exit();
+
             }          
         }
 
@@ -108,7 +149,12 @@ namespace 在线更新程序
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Gettmepfile();
+            
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
