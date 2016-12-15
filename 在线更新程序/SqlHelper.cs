@@ -9,7 +9,7 @@ namespace 在线更新程序
 {
     class SqlHelper
     {
-        public static readonly string CnStr = "server=10.194.48.150\\mysql;user id=sa;password=Aa123456;initial catalog=Update OnLine;Connect Timeout=5";
+        public static readonly string CnStr = "server=suznt004;user id=andy;password=123;initial catalog=Update OnLine;Connect Timeout=5";
 
         public static DataSet ExcuteDataSet(string Sql)
         {

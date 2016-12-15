@@ -38,7 +38,7 @@ namespace 在线更新程序
         private void loadupdate()
         {
             string[] sArray = Program.str.Split('#');
-
+            Thread.Sleep(3000);
             foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
             {
                 if (p.ProcessName == sArray[1])

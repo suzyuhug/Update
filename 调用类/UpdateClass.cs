@@ -10,10 +10,15 @@ using System.Windows.Forms;
 
 namespace 调用类
 {
+    //======================================关于窗体的调用=====================================
+    //                            UpdateClass.UpdateFrom("KTE");
+    //              KTE必须于服务端一至
+    //=========================================================================================
+
     class UpdateClass
     {
         static string AppName =null;
-        public static readonly string CnStr = "server=10.194.48.150\\mysql;user id=sa;password=Aa123456;initial catalog=Update OnLine;Connect Timeout=5";
+        public static readonly string CnStr = "server=suznt004;user id=andy;password=123;initial catalog=Update OnLine;Connect Timeout=5";
 
         public static DataSet ExcuteDataSet(string Sql)
         {
